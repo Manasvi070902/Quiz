@@ -2,14 +2,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const shortid = require("shortid")
 const Quiz = require("../models/quizmodel");
-
+const User = require("../models/user");
+const ensureAuthenticated = require("../middleware/ensureAuthenticated");
 
 
 
 const router = express.Router();
 
 //Create the form for quiz 
-router.post("/create",async (req, res, next) => {
+router.post("/create",ensureAuthenticated,async (req, res, next) => {
 	
 			const quiz = new Quiz({
 				_id: new mongoose.Types.ObjectId(),
@@ -24,8 +25,26 @@ router.post("/create",async (req, res, next) => {
 			});
 			quiz.save()
 				.then(async (result) => {
-					console.log("created quiz")
-					res.status(200).json({ message: "created quiz",result });
+					console.log(result._id)
+					const quizId = result._id;
+					console.log(req.user)
+					User.updateOne(
+						{ user_id: req.user.user_id },
+						{ $push: { quizzes: { quiz_id : quizId }
+						  } }
+					)
+					.then(async (result1) => {
+						console.log("success quiz added in user")
+						res.status(200).json({
+							message: "created quiz",
+							result,
+						});
+					})
+					.catch(async (err) => {
+						console.log(err)
+						res.status(400).json({ error: "err1" });
+					});
+					//res.status(200).json({ message: "created quiz",result });
 				})
 				.catch((err) => {
 					console.log(err)

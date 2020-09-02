@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const quizSchema = new mongoose.Schema({
+	
+
 	quizTitle: { 
 		type: String, 
 		
@@ -32,25 +34,28 @@ const quizSchema = new mongoose.Schema({
 
 	},
     question:[
-	{ quizquestion:{
-		questiontext: {
-			type: String,
-			required: true,
-		},
-		options: [
-			 {
-				 text: {
-					 type: String,
-					 required: true,
+		{quizquestion:{
+			questiontext: {
+				type: String,
+				required: true,
+			},
+			options: [
+				 {
+					 text: {
+						 type: String,
+						 
+					 },
 				 },
-			 },
-		],
-		correctAns: {
-			type: String,
-			required: true,
-		},
-	}
-    }],
+			],
+			textbox : {
+				type:String
+			},
+			correctAns: {
+				type: String,
+				
+			},
+		}
+		}],
 	
 	quizStatus: {
 		type: Number,

@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const shortid = require("shortid")
 const Form = require("../models/form");
+const User = require("../models/user");
+const ensureAuthenticated = require("../middleware/ensureAuthenticated");
 
 
 
@@ -9,10 +11,11 @@ const Form = require("../models/form");
 const router = express.Router();
 
 //Create feedbackform
-router.post("/create",async (req, res, next) => {
+router.post("/create", ensureAuthenticated,async (req, res, next) => {
 	
 	const form = new Form({
 		_id: new mongoose.Types.ObjectId(),
+		
 		formTitle: req.body.formTitle,
 		formDescription:req.body.formDescription,
 		formCode: shortid.generate(),
@@ -21,8 +24,22 @@ router.post("/create",async (req, res, next) => {
 	});
 	form.save()
 		.then(async (result) => {
-			console.log("created form")
-			res.status(200).json({ message: "created form",result });
+			// console.log("created form")
+			// res.status(200).json({ message: "created form",result });
+			const formId = result._id;
+					console.log(req.user)
+					User.updateOne(
+						{ user_id: req.user.user_id },
+						{ $push: { forms: { form_id : formId }
+						  } }
+					)
+					.then(async (sucess) => {
+						console.log("success form added in user")
+						res.status(200).json({
+							message: "created form",
+							result,
+						});
+					})
 		})
 		.catch((err) => {
 			console.log(err)

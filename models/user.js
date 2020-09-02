@@ -33,6 +33,18 @@ const userSchema = mongoose.Schema({
     default: "",
     trim: true,
   },
+  quizzes : [{
+    quiz_id  : {
+      type : String,
+      default: ""
+    }
+  }],
+  forms : [{
+    form_id  : {
+      type : String,
+      default: ""
+    }
+  }]
 });
 
 const User = mongoose.model("User", userSchema);

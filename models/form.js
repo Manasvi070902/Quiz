@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const FormSchema = new mongoose.Schema({
+	
+	
+	
 	formTitle: { 
 		type: String, 
 		
@@ -17,7 +20,7 @@ const FormSchema = new mongoose.Schema({
 	},
     question:[
 	{
-		quizquestion:{
+		formquestion:{
 		questiontext: {
 			type: String,
 			required: true,
@@ -32,6 +35,10 @@ const FormSchema = new mongoose.Schema({
 				 },
 			 },
 		],
+
+		textbox : {
+			type: String,
+		},
 		correctAns: {
 			type: String,
 			required: true,	
