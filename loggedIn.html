@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="./constants.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
 <script>
- var firebaseConfig = {
-    apiKey: "AIzaSyAnqIZj9_LLt8uYd7u3kzmZwt_2eup_J_s",
-    authDomain: "quiz-portal-6a1de.firebaseapp.com",
-    databaseURL: "https://quiz-portal-6a1de.firebaseio.com",
-    projectId: "quiz-portal-6a1de",
-    storageBucket: "quiz-portal-6a1de.appspot.com",
-    messagingSenderId: "58846213793",
-    appId: "1:58846213793:web:4efad83953c7e5d19762e0"
+  var firebaseConfig = {
+    apiKey: "AIzaSyDOYLD2f3rqjIUtVjIU7o2pjeahvMY-Flc",
+    authDomain: "codezap-84242.firebaseapp.com",
+    databaseURL: "https://codezap-84242.firebaseio.com",
+    projectId: "codezap-84242",
+    storageBucket: "codezap-84242.appspot.com",
+    messagingSenderId: "975541410224",
+    appId: "1:975541410224:web:84f559a01eb822f8395e75",
+    measurementId: "G-NBVVHYC6XY"
   };
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const auth=firebase.auth();
 </script>
@@ -25,35 +26,28 @@
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           // User is signed in.
-          firebase.auth().currentUser.getIdToken(/*forceRefresh */ true).then(function(idToken){
-            //accessing id token of current user
+          firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) { //accessing idtoken of current user signed in
             console.log(idToken);
-
-            fetch("/users",{
+            fetch(constants.APIBaseURL+"/users",{
                 method: 'POST',
                 headers: {
                     'authtoken': idToken,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username : user.displayName
+                    username : "abc"
                 }),
                 redirect: 'follow'
             })
             .then(resp=>resp.json())
             .then(result=>{
                 console.log(result)
-
             })
-           .catch(err => console.log(err));
+            .catch(function(error) {
+                console.log(error);
+            });
+
             
-
-          }).catch(function(error){
-            console.log(error);
-          
-          })
-
-
           var displayName = user.displayName;
           var email = user.email;
           user.getIdToken().then(function(accessToken) {
@@ -64,24 +58,26 @@
               email: email
             }, null, '  ');
           });
-        } else {
-          
-        window.location.href = '/'
+        }) 
         }
-      }, function(error) {
-        console.log(error);
-      });
-    };
-
+        else {
+          // User is signed out.
+        //   document.getElementById('sign-in-status').textContent = 'Signed out';
+        //   document.getElementById('sign-in').innerHTML = "<a>Sign in</a>";
+        //   document.getElementById('account-details').textContent = 'null';
+            window.location.href = 'http://127.0.0.1:5500/index.html'
+        }
+    });
+    }
     window.addEventListener('load', function() {
       initApp();
     });
 //     const logout=document.querySelector('#logout');
 
-function logout(event){
-    event.preventDefault();
-    auth.signOut();
-};
+    function logout(event){
+        event.preventDefault();
+        auth.signOut();
+    };
 
   </script>
 </head>
